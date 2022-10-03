@@ -1,7 +1,7 @@
 import flask
 import json
 from flask import Response
-from flaskr.chess import KnightFigure 
+from flaskr.chess import KnightFigure, PawnFigure, KingFigure, QueenFigure, BishopFigure, RookFigure
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -14,11 +14,23 @@ def home():
 @app.route('/api/v1/<chess_figure>/<current_field>')
 def get_figure_move_list(chess_figure=None, current_field=None):
     
-    k = KnightFigure('A1')
-    k_list = k.list_available_moves()
+    functionsDict = {
+        'knight': KnightFigure,
+        'pawn': PawnFigure,
+        'king': KingFigure,
+        'queen': QueenFigure,
+        'bishop': BishopFigure,
+        'rook': RookFigure
+    }
 
+    # validate_chess_figure_name(chess_figure)
 
-    js = [ { "moves" : k_list, "name" : k.name} ]
+    # validate_current_field_name(current_field)
+
+    fig = functionsDict[chess_figure](current_field)
+    fig_moves_list = fig.list_available_moves()
+
+    js = [ { "moves" : fig_moves_list, "name" : fig.name} ]
     return Response(json.dumps(js),  mimetype='application/json')
 
 
