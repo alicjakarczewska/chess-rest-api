@@ -16,15 +16,16 @@ class Figure(metaclass=ABCMeta):
 
     def __init__(self, current_field=None):
       self._current_field = current_field
+      self.name = 'Figure'
 
-
+    def __str__(self):
+      return self.name
+    
     def list_available_moves(self, *args, **kwargs):
-      pos = get_available_moves(self)
-      return pos
+      pass
 
     def validate_move(dest_field):
       logger.info("Not implemented")
-
 
     def get_available_moves(self):
 
@@ -44,10 +45,23 @@ class Figure(metaclass=ABCMeta):
         return pos
 
 
+class PawnFigure(Figure):
+
+    def __init__(self, current_field=None, *args, **kwargs):
+        super().__init__(current_field)
+        self.name = 'pawn'
+        self._X = [0]
+        self._Y = [1]
+
+    def list_available_moves(self):
+        pos = self.get_available_moves()
+        return pos
+
 class KnightFigure(Figure):
 
     def __init__(self, current_field=None, *args, **kwargs):
         super().__init__(current_field)
+        self.name = 'knight'
         self._X = [2, 1, -1, -2, -2, -1, 1, 2]
         self._Y = [1, 2, 2, 1, -1, -2, -2, -1]
 
@@ -56,11 +70,80 @@ class KnightFigure(Figure):
         return pos
 
 
+class BishopFigure(Figure):
+
+    def __init__(self, current_field=None, *args, **kwargs):
+        super().__init__(current_field)
+        self.name = 'bishop'
+        self._X = [x for x in range(1,9)] * 2 + [-x for x in range(1,9)] * 2
+        self._Y = ([x for x in range(1,9)] + [-x for x in range(1,9)]) * 2
+
+    def list_available_moves(self):
+        pos = self.get_available_moves()
+        return pos
+
+
+class RookFigure(Figure):
+
+    def __init__(self, current_field=None, *args, **kwargs):
+        super().__init__(current_field)
+        self.name = 'rook'
+        self._X = [x for x in range(1,9)] + [-x for x in range(1,9)] + [0] * 16
+        self._Y = [0] * 16 + [x for x in range(1,9)] + [-x for x in range(1,9)]
+
+    def list_available_moves(self):
+        pos = self.get_available_moves()
+        return pos
+
+
+class QueenFigure(Figure):
+
+    def __init__(self, current_field=None, *args, **kwargs):
+        super().__init__(current_field)
+        self.name = 'queen'
+
+    def list_available_moves(self):
+        rook_figure = RookFigure(self._current_field)
+        bishop_figure = BishopFigure(self._current_field)
+
+        pos_rook = rook_figure.get_available_moves()
+        pos_bishop = bishop_figure.get_available_moves()
+        pos = pos_bishop + pos_rook
+
+        return pos
+
+
+class KingFigure(Figure):
+
+    def __init__(self, current_field=None, *args, **kwargs):
+        super().__init__(current_field)
+        self.name = 'king'
+        self._X = [0, 1, 1, 1, 0, -1, -1, -1]
+        self._Y = [1, 1, 0, -1, -1, -1, 0, 1]
+
+    def list_available_moves(self):
+        pos = self.get_available_moves()
+        return pos
+
 # Driver code
 if __name__ == '__main__':
 
-    k_position = "H5"
+    k_position = translate_position_to_list("A8")
 
-    k = KnightFigure(translate_position_to_list(k_position))
-    k_pos = k.list_available_moves()
-    print(k_pos)
+    k = QueenFigure(k_position)
+    print(k.name, k.list_available_moves())
+
+    k = RookFigure(k_position)
+    print(k.name, k.list_available_moves())
+
+    k = KnightFigure(k_position)
+    print(k.name, k.list_available_moves())
+
+    k = BishopFigure(k_position)
+    print(k.name, k.list_available_moves())
+
+    k = KingFigure(k_position)
+    print(k.name, k.list_available_moves())
+
+    k = PawnFigure(k_position)
+    print(k.name, k.list_available_moves())
