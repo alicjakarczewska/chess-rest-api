@@ -6,6 +6,8 @@ from flaskr.chess import KnightFigure, PawnFigure, KingFigure, QueenFigure, Bish
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
+chessboard = create_chessboard()
+
 figuresDict = {
         'knight': KnightFigure,
         'pawn': PawnFigure,
@@ -16,18 +18,21 @@ figuresDict = {
     }
 
 def validate_chess_figure_name(chess_figure):
-    message = ""
+    res = {}
     if chess_figure.lower() not in figuresDict.keys():
-        message = "Figure does not exist."
-    return message
+        res['error'] = "Figure does not exist."
+        res_code = 404
+        return res, res_code
+    return None
 
 
-def validate_current_field_name(current_field):
-    message = ""
-    chessboard = create_chessboard()
-    if current_field.upper() not in chessboard:
-        message = "Field does not exist."
-    return message
+def validate_field_name(field_name):
+    res = {}
+    if field_name.upper() not in chessboard:
+        res['error'] = "Field does not exist."
+        res_code = 409
+        return res, res_code
+    return None
     
 
 @app.route('/', methods=['GET'])
@@ -39,34 +44,58 @@ def home():
 def get_figure_move_list(chess_figure=None, current_field=None):   
 
     res = {
-        'figure': chess_figure,
-        'currentField': current_field
+        'figure': chess_figure.lower(),
+        'currentField': current_field.upper(),
+        'availableMoves': [],
+        'error': None
     }
-
-    error_chess_figure = validate_chess_figure_name(chess_figure)
-    if error_chess_figure:
-        res['availableMoves'] = []
-        res['error'] = error_chess_figure
-        res_code = 404
-
-        return Response(json.dumps(res),  mimetype='application/json'), res_code
-
-    error_field = validate_current_field_name(current_field)    
-    if error_field:
-        res['availableMoves'] = []
-        res['error'] = error_field
-        res_code = 409
-
-        return Response(json.dumps(res),  mimetype='application/json'), res_code
-    
-    fig = figuresDict[chess_figure.lower()](current_field.upper())
-    fig_moves_list = fig.list_available_moves()
-
-    res['availableMoves'] = fig_moves_list
-    res['error'] = None
     res_code = 200
 
+    err_fig_name = validate_chess_figure_name(chess_figure)
+    err_curr_field = validate_field_name(current_field)  
+
+    err = err_fig_name if err_fig_name else False    
+    err = err_curr_field if err_curr_field else err
+
+    if err:
+        res.update(err[0])
+        res_code = err[1]
+    else:
+        fig = figuresDict[chess_figure.lower()](current_field.upper())
+        fig_moves_list = fig.list_available_moves()
+        res['availableMoves'] = fig_moves_list
+
     return Response(json.dumps(res),  mimetype='application/json'), res_code
+
+@app.route('/api/v1/<chess_figure>/<current_field>/<dest_field>', methods=['GET'])
+def get_figure_move_validation(chess_figure=None, current_field=None, dest_field=None):   
+
+    res = {
+        'figure': chess_figure.lower(),
+        'currentField': current_field.upper(),
+        'destField': dest_field.upper(),
+        'error': None
+    }
+    res_code = 200
+
+    err_fig_name = validate_chess_figure_name(chess_figure)
+    err_curr_field = validate_field_name(current_field)  
+    err_dest_field = validate_field_name(dest_field)  
+
+    err = err_fig_name if err_fig_name else False    
+    err = err_curr_field if err_curr_field else err
+    err = err_dest_field if err_dest_field else err
+
+    if err:
+        res.update(err[0])
+        res_code = err[1]
+    else:
+        fig = figuresDict[chess_figure.lower()](current_field.upper())
+        answer = fig.validate_move(dest_field.upper())
+        res['move'] = 'valid' if answer else 'invalid'            
+
+    return Response(json.dumps(res),  mimetype='application/json'), res_code
+
 
 @app.errorhandler(500)
 def internal_error(error):
