@@ -15,7 +15,7 @@ def translate_list_to_position(pos_list):
 class Figure(metaclass=ABCMeta):
 
     def __init__(self, current_field=None):
-      self._current_field = current_field
+      self._current_field = translate_position_to_list(current_field)
       self.name = 'Figure'
 
     def __str__(self):
