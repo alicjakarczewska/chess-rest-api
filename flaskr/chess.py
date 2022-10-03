@@ -11,6 +11,16 @@ def translate_list_to_position(pos_list):
     pos = chr(pos_list[0]+64) + str(pos_list[1])
     return pos
 
+def create_chessboard():
+    """A function to create list of chesboard field"""
+    letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+    chessboard = [ ]
+
+    for l in letters:
+        for i in range(1, 9):
+            chessboard.append(l+str(i))
+            
+    return chessboard
 
 class Figure(metaclass=ABCMeta):
 
