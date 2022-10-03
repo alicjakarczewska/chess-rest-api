@@ -14,7 +14,7 @@ def translate_list_to_position(pos_list):
 def create_chessboard():
     """A function to create list of chesboard field"""
     letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
-    chessboard = [ ]
+    chessboard = []
 
     for l in letters:
         for i in range(1, 9):
@@ -31,11 +31,29 @@ class Figure(metaclass=ABCMeta):
     def __str__(self):
       return self.name
     
-    def list_available_moves(self, *args, **kwargs):
-      pass
+    def list_available_moves(self):
+        X = self._X
+        Y = self._Y
+        current_field = self._current_field
 
-    def validate_move(dest_field):
-      logger.info("Not implemented")
+        pos = []
+
+        for i in range(len(X)):
+          x = current_field[0] + X[i]
+          y = current_field[1] + Y[i]
+          
+          if(x > 0 and y > 0 and x <= 8 and y <= 8):
+            pos.append(translate_list_to_position([x, y]))
+
+        return pos
+
+    def validate_move(self, dest_field):
+      available_moves_list = self.get_available_moves()
+      if dest_field in available_moves_list:
+        return True
+      else:
+        return False
+
 
     def get_available_moves(self):
 
@@ -63,9 +81,7 @@ class PawnFigure(Figure):
         self._X = [0]
         self._Y = [1]
 
-    def list_available_moves(self):
-        pos = self.get_available_moves()
-        return pos
+
 
 class KnightFigure(Figure):
 
@@ -75,10 +91,7 @@ class KnightFigure(Figure):
         self._X = [2, 1, -1, -2, -2, -1, 1, 2]
         self._Y = [1, 2, 2, 1, -1, -2, -2, -1]
 
-    def list_available_moves(self):
-        pos = self.get_available_moves()
-        return pos
-
+    
 
 class BishopFigure(Figure):
 
@@ -88,9 +101,7 @@ class BishopFigure(Figure):
         self._X = [x for x in range(1,9)] * 2 + [-x for x in range(1,9)] * 2
         self._Y = ([x for x in range(1,9)] + [-x for x in range(1,9)]) * 2
 
-    def list_available_moves(self):
-        pos = self.get_available_moves()
-        return pos
+
 
 
 class RookFigure(Figure):
@@ -101,28 +112,6 @@ class RookFigure(Figure):
         self._X = [x for x in range(1,9)] + [-x for x in range(1,9)] + [0] * 16
         self._Y = [0] * 16 + [x for x in range(1,9)] + [-x for x in range(1,9)]
 
-    def list_available_moves(self):
-        pos = self.get_available_moves()
-        return pos
-
-
-class QueenFigure(Figure):
-
-    def __init__(self, current_field=None, *args, **kwargs):
-        super().__init__(current_field)
-        self.name = 'queen'
-
-    def list_available_moves(self):
-        rook_figure = RookFigure(self._current_field)
-        bishop_figure = BishopFigure(self._current_field)
-
-        pos_rook = rook_figure.get_available_moves()
-        pos_bishop = bishop_figure.get_available_moves()
-        pos = pos_bishop + pos_rook
-
-        return pos
-
-
 class KingFigure(Figure):
 
     def __init__(self, current_field=None, *args, **kwargs):
@@ -131,29 +120,50 @@ class KingFigure(Figure):
         self._X = [0, 1, 1, 1, 0, -1, -1, -1]
         self._Y = [1, 1, 0, -1, -1, -1, 0, 1]
 
+class QueenFigure(Figure):
+
+    def __init__(self, current_field=None, *args, **kwargs):
+        super().__init__(current_field)
+        self.name = 'queen'
+
     def list_available_moves(self):
-        pos = self.get_available_moves()
+        position = translate_list_to_position(self._current_field)
+        
+        rook_figure = RookFigure(position)
+        bishop_figure = BishopFigure(position)
+
+        pos_rook = rook_figure.get_available_moves()
+        pos_bishop = bishop_figure.get_available_moves()
+        pos = pos_bishop + pos_rook
+
         return pos
 
 # Driver code
 if __name__ == '__main__':
 
-    k_position = translate_position_to_list("A8")
+    a_position = "A5"
+    b_position = "B5"
 
-    k = QueenFigure(k_position)
+
+    k = KnightFigure(a_position)
+    print(k.name, k.list_available_moves())
+    print(k.validate_move("B5"))
+    print(k.validate_move("B6"))
+
+    
+
+    k = KingFigure(a_position)
     print(k.name, k.list_available_moves())
 
-    k = RookFigure(k_position)
+    k = RookFigure(a_position)
     print(k.name, k.list_available_moves())
 
-    k = KnightFigure(k_position)
+    k = PawnFigure(a_position)
     print(k.name, k.list_available_moves())
 
-    k = BishopFigure(k_position)
+    k = BishopFigure(a_position)
     print(k.name, k.list_available_moves())
 
-    k = KingFigure(k_position)
+    k = QueenFigure(a_position)
     print(k.name, k.list_available_moves())
 
-    k = PawnFigure(k_position)
-    print(k.name, k.list_available_moves())
