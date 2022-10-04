@@ -25,7 +25,7 @@ figuresDict = {
 }
 
 
-def validate_chess_figure_name(chess_figure):
+def validate_chess_figure_name(chess_figure: str):
     figures_names = ["knight", "pawn", "king", "queen", "bishop", "rook"]
     res = {}
     if chess_figure.lower() not in figures_names:
@@ -35,7 +35,7 @@ def validate_chess_figure_name(chess_figure):
     return None
 
 
-def validate_field_name(field_name):
+def validate_field_name(field_name: str):
     res = {}
     if field_name.upper() not in chessboard:
         res["error"] = "Field does not exist."
@@ -50,7 +50,7 @@ def home():
 
 
 @app.route("/api/v1/<chess_figure>/<current_field>", methods=["GET"])
-def get_figure_move_list(chess_figure=None, current_field=None):
+def get_figure_move_list(chess_figure: str, current_field: str):
 
     res = {
         "figure": chess_figure.lower(),
@@ -81,7 +81,7 @@ def get_figure_move_list(chess_figure=None, current_field=None):
     "/api/v1/<chess_figure>/<current_field>/<dest_field>", methods=["GET"]
 )
 def get_figure_move_validation(
-    chess_figure=None, current_field=None, dest_field=None
+    chess_figure: str, current_field: str, dest_field: str
 ):
 
     res = {
