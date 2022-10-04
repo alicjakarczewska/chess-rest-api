@@ -22,7 +22,7 @@ def test_get_move_list_route():
     assert response.json["figure"] == "king"
     assert response.json["currentField"] == "H2"
     assert response.json["availableMoves"] == ["H3", "H1", "G1", "G2", "G3"]
-    assert response.json["error"] == None
+    assert response.json["error"] is None
 
 
 def test_get_move_list_with_incorrect_figure_name_route():
@@ -67,7 +67,7 @@ def test_validate_valid_move_route():
     assert response.status_code == 200
     assert response.content_type == "application/json"
     assert isinstance(response.json, dict)
-    assert set(response.json.keys()) >= {
+    assert set(response.json.keys()) == {
         "figure",
         "currentField",
         "destField",
@@ -77,7 +77,7 @@ def test_validate_valid_move_route():
     assert response.json["figure"] == "king"
     assert response.json["currentField"] == "H2"
     assert response.json["destField"] == "H3"
-    assert response.json["error"] == None
+    assert response.json["error"] is None
     assert response.json["move"] == "valid"
 
 
@@ -87,7 +87,7 @@ def test_validate_invalid_move_route():
     assert response.status_code == 200
     assert response.content_type == "application/json"
     assert isinstance(response.json, dict)
-    assert set(response.json.keys()) >= {
+    assert set(response.json.keys()) == {
         "figure",
         "currentField",
         "destField",
@@ -97,7 +97,7 @@ def test_validate_invalid_move_route():
     assert response.json["figure"] == "king"
     assert response.json["currentField"] == "H2"
     assert response.json["destField"] == "H4"
-    assert response.json["error"] == None
+    assert response.json["error"] is None
     assert response.json["move"] == "invalid"
 
 
@@ -107,7 +107,12 @@ def test_validate_move_with_incorrect_curr_field_name_route():
     assert response.status_code == 409
     assert response.content_type == "application/json"
     assert isinstance(response.json, dict)
-    assert set(response.json.keys()) >= {"figure", "currentField", "destField", "error"}
+    assert set(response.json.keys()) == {
+        "figure",
+        "currentField",
+        "destField",
+        "error",
+    }
     assert response.json["figure"] == "king"
     assert response.json["currentField"] == "H9"
     assert response.json["destField"] == "H4"
@@ -120,7 +125,12 @@ def test_validate_move_with_incorrect_dest_field_name_route():
     assert response.status_code == 409
     assert response.content_type == "application/json"
     assert isinstance(response.json, dict)
-    assert set(response.json.keys()) >= {"figure", "currentField", "destField", "error"}
+    assert set(response.json.keys()) == {
+        "figure",
+        "currentField",
+        "destField",
+        "error",
+    }
     assert response.json["figure"] == "king"
     assert response.json["currentField"] == "H4"
     assert response.json["destField"] == "H9"
@@ -133,7 +143,12 @@ def test_validate_move_with_incorrect_figure_name_route():
     assert response.status_code == 404
     assert response.content_type == "application/json"
     assert isinstance(response.json, dict)
-    assert set(response.json.keys()) >= {"figure", "currentField", "destField", "error"}
+    assert set(response.json.keys()) == {
+        "figure",
+        "currentField",
+        "destField",
+        "error",
+    }
     assert response.json["figure"] == "kings"
     assert response.json["currentField"] == "H4"
     assert response.json["destField"] == "H3"

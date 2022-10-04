@@ -18,9 +18,9 @@ def create_chessboard():
     letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
     chessboard = []
 
-    for l in letters:
+    for letter in letters:
         for i in range(1, 9):
-            chessboard.append(l + str(i))
+            chessboard.append(letter + str(i))
 
     return chessboard
 
@@ -90,8 +90,12 @@ class RookFigure(Figure):
     def __init__(self, current_field=None, *args, **kwargs):
         super().__init__(current_field)
         self.name = "rook"
-        self._X = [x for x in range(1, 9)] + [-x for x in range(1, 9)] + [0] * 16
-        self._Y = [0] * 16 + [x for x in range(1, 9)] + [-x for x in range(1, 9)]
+        self._X = (
+            [x for x in range(1, 9)] + [-x for x in range(1, 9)] + [0] * 16
+        )
+        self._Y = (
+            [0] * 16 + [x for x in range(1, 9)] + [-x for x in range(1, 9)]
+        )
 
 
 class KingFigure(Figure):

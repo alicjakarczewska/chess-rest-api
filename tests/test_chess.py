@@ -12,6 +12,7 @@ from flaskr.chess import (
 import collections
 import pytest
 
+
 # Tests for creating figures objects
 def test_knight_create():
     fig = KnightFigure("A5")
@@ -46,7 +47,7 @@ def test_queen_create():
 # Test for creating a figure object with invalid argument current_field
 def test_create_figure_with_invalid_current_field_arg():
     with pytest.raises(ValueError, match="invalid argument!"):
-        fig = KnightFigure("A55")
+        KnightFigure("A55")
 
 
 # Tests for list figures available moves
@@ -136,48 +137,48 @@ def test_knight_validate_move():
     fig = KnightFigure("A5")
     valid_move = fig.validate_move("C6")
     invalid_move = fig.validate_move("C7")
-    assert valid_move == True
-    assert invalid_move == False
+    assert valid_move is True
+    assert invalid_move is False
 
 
 def test_king_validate_move():
     fig = KingFigure("A5")
     valid_move = fig.validate_move("A6")
     invalid_move = fig.validate_move("C7")
-    assert valid_move == True
-    assert invalid_move == False
+    assert valid_move is True
+    assert invalid_move is False
 
 
 def test_rook_validate_move():
     fig = RookFigure("A5")
     valid_move = fig.validate_move("B5")
     invalid_move = fig.validate_move("C7")
-    assert valid_move == True
-    assert invalid_move == False
+    assert valid_move is True
+    assert invalid_move is False
 
 
 def test_pawn_validate_move():
     fig = PawnFigure("A5")
     valid_move = fig.validate_move("A6")
     invalid_move = fig.validate_move("C7")
-    assert valid_move == True
-    assert invalid_move == False
+    assert valid_move is True
+    assert invalid_move is False
 
 
 def test_bishop_validate_move():
     fig = BishopFigure("A5")
     valid_move = fig.validate_move("B6")
     invalid_move = fig.validate_move("C6")
-    assert valid_move == True
-    assert invalid_move == False
+    assert valid_move is True
+    assert invalid_move is False
 
 
 def test_queen_validate_move():
     fig = QueenFigure("A5")
     valid_move = fig.validate_move("B6")
     invalid_move = fig.validate_move("B7")
-    assert valid_move == True
-    assert invalid_move == False
+    assert valid_move is True
+    assert invalid_move is False
 
 
 # test position translation function
@@ -200,8 +201,8 @@ def test_create_chessboard():
 
     letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"]
     expected = []
-    for l in letters:
+    for letter in letters:
         for i in range(1, 9):
-            expected.append(l + str(i))
+            expected.append(letter + str(i))
 
     assert actual == expected

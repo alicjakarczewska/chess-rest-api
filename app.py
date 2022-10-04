@@ -77,8 +77,12 @@ def get_figure_move_list(chess_figure=None, current_field=None):
     return Response(json.dumps(res), mimetype="application/json"), res_code
 
 
-@app.route("/api/v1/<chess_figure>/<current_field>/<dest_field>", methods=["GET"])
-def get_figure_move_validation(chess_figure=None, current_field=None, dest_field=None):
+@app.route(
+    "/api/v1/<chess_figure>/<current_field>/<dest_field>", methods=["GET"]
+)
+def get_figure_move_validation(
+    chess_figure=None, current_field=None, dest_field=None
+):
 
     res = {
         "figure": chess_figure.lower(),
