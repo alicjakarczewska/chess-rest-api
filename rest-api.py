@@ -4,7 +4,6 @@ from flask import Response
 from flaskr.chess import KnightFigure, PawnFigure, KingFigure, QueenFigure, BishopFigure, RookFigure, create_chessboard
 
 app = flask.Flask(__name__)
-app.config["DEBUG"] = True
 
 chessboard = create_chessboard()
 
@@ -101,4 +100,5 @@ def get_figure_move_validation(chess_figure=None, current_field=None, dest_field
 def internal_error(error):
     return "500 error"
 
-app.run()
+if __name__ == '__main__':
+    app.run(host="localhost", port=8000, debug=True)

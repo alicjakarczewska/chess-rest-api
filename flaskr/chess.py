@@ -48,29 +48,11 @@ class Figure(metaclass=ABCMeta):
         return pos
 
     def validate_move(self, dest_field):
-      available_moves_list = self.get_available_moves()
+      available_moves_list = self.list_available_moves()
       if dest_field in available_moves_list:
         return True
       else:
         return False
-
-
-    def get_available_moves(self):
-
-        X = self._X
-        Y = self._Y
-        current_field = self._current_field
-
-        pos = []
-
-        for i in range(len(X)):
-          x = current_field[0] + X[i]
-          y = current_field[1] + Y[i]
-          
-          if(x > 0 and y > 0 and x <= 8 and y <= 8):
-            pos.append(translate_list_to_position([x, y]))
-
-        return pos
 
 
 class PawnFigure(Figure):
@@ -132,8 +114,8 @@ class QueenFigure(Figure):
         rook_figure = RookFigure(position)
         bishop_figure = BishopFigure(position)
 
-        pos_rook = rook_figure.get_available_moves()
-        pos_bishop = bishop_figure.get_available_moves()
+        pos_rook = rook_figure.list_available_moves()
+        pos_bishop = bishop_figure.list_available_moves()
         pos = pos_bishop + pos_rook
 
         return pos
