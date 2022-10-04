@@ -10,7 +10,7 @@ Pisane w terminalu w główym folderze aplikacji 'flask_api':
 
 2. Uruchomienie utworzonego środowiska pracy
 
-`python venv\Scripts\activate`
+`venv\Scripts\activate`
 
 3. Instalacja pakietów z pliku requirements.txt
 
