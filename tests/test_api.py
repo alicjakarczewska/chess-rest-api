@@ -1,4 +1,4 @@
-from app import app
+from app import app, validate_field_name, validate_chess_figure_name
 
 def test_index_route():
     response = app.test_client().get('/')
@@ -103,3 +103,21 @@ def test_validate_move_with_incorrect_figure_name_route():
   assert response.json['currentField'] == 'H4'
   assert response.json['destField'] == 'H3'
   assert response.json['error'] == "Figure does not exist."
+
+def test_validate_correct_chess_figure_name():
+  result = validate_chess_figure_name('king')
+  assert result is None
+
+def test_validate_incorrect_chess_figure_name():
+  result = validate_chess_figure_name('kings')
+  expected = ({ 'error' : "Figure does not exist." }, 404)
+  assert result == expected
+
+def test_validate_correct_field_name():
+  result = validate_field_name('A1')
+  assert result is None
+
+def test_validate_incorrect_field_name():
+  result = validate_field_name('A9')
+  expected = ({ 'error' : "Field does not exist." }, 409)
+  assert result == expected

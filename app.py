@@ -17,8 +17,9 @@ figuresDict = {
     }
 
 def validate_chess_figure_name(chess_figure):
+    figures_names = ['knight', 'pawn', 'king', 'queen', 'bishop', 'rook' ]
     res = {}
-    if chess_figure.lower() not in figuresDict.keys():
+    if chess_figure.lower() not in figures_names:
         res['error'] = "Figure does not exist."
         res_code = 404
         return res, res_code
