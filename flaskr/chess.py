@@ -22,9 +22,13 @@ def create_chessboard():
             
     return chessboard
 
+chessboard = create_chessboard()
+
 class Figure(metaclass=ABCMeta):
 
     def __init__(self, current_field=None):
+      if current_field.upper() not in chessboard:
+        raise ValueError("invalid argument!")
       self._current_field = translate_position_to_list(current_field)
       self.name = 'Figure'
 
@@ -123,7 +127,7 @@ class QueenFigure(Figure):
 # Driver code
 if __name__ == '__main__':
 
-    a_position = "A5"
+    a_position = "A55"
     b_position = "B5"
 
 
@@ -148,4 +152,5 @@ if __name__ == '__main__':
 
     k = QueenFigure(a_position)
     print(k.name, k.list_available_moves())
+    print(type(k))
 
